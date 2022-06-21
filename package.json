@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.1"
+  },
+  "name": "vittaapp-api",
+  "description": "El microservicio RESTFul para la aplicación Vitta",
+  "version": "0.1.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./index.js",
+    "dev": "./node_modules/nodemon/bin/nodemon.js ./index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vitta2022app/vittaapp-api.git"
+  },
+  "author": "Vitta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vitta2022app/vittaapp-api/issues"
+  },
+  "homepage": "https://github.com/vitta2022app/vittaapp-api#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}
