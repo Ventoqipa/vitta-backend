@@ -1,8 +1,17 @@
 
 const express = require('express');
-const app = express();
-const port = 3000;
+const bodyparser = require('body-parser');
 const path = require('path');
+const requestValidator = require('./middleware/requestValidator.middleware')
+
+require('dotenv').config();
+
+const port = process.env.PORT;
+const app = express();
+
+app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyparser.json());
+
 
 app.get('/', (req, res) => {
   const accepted = req.accepts(["json","html"]);
@@ -13,6 +22,9 @@ app.get('/', (req, res) => {
   else
     res.sendStatus(406);
 });
+
+app.use('/auth', require('./router/auth.router'));
+app.use('/users', requestValidator, require('./router/users.router'));
 
 app.listen(port, () => {
   console.log(`Just doing magic for Vitta on port ${port}`);
