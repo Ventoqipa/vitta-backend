@@ -2,7 +2,7 @@
 const express = require('express');
 const bodyparser = require('body-parser');
 const path = require('path');
-const requestValidator = require('./middleware/requestValidator.middleware')
+const {verifyToken,verifyApiKey} = require('./middleware/requestValidator.middleware')
 
 require('dotenv').config();
 
@@ -23,8 +23,8 @@ app.get('/', (req, res) => {
     res.sendStatus(406);
 });
 
-app.use('/auth', require('./router/auth.router'));
-app.use('/users', requestValidator, require('./router/users.router'));
+app.use('/auth', verifyApiKey, require('./router/auth.router'));
+app.use('/users', verifyToken, require('./router/users.router'));
 
 app.listen(port, () => {
   console.log(`Just doing magic for Vitta on port ${port}`);
