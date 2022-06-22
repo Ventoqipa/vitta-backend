@@ -4,14 +4,15 @@ var compare = require('tsscmp')
 
 
 const verifyToken = (req, res, next) => {
-    const token = req.header('auth-token');
+    const token = req.header('authorization');
     if (!token) return res.status(401).json({ error: 'Acceso denegado' });
     try {
-        const verified = jwt.verify(token, process.env.AUTH_SECRET);
+        const cleanToken = token.split('Bearer').pop().trim();
+        const verified = jwt.verify(cleanToken, process.env.AUTH_SECRET);
         req.user = verified;
         next();
     } catch (error) {
-        res.status(400).json({error: 'token no es válido'});
+        res.status(400).json({error: 'Token no es válido'});
     }
 }
 function check (username, password) {
