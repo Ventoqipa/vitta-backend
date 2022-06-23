@@ -23,8 +23,8 @@ app.get('/', (req, res) => {
     res.sendStatus(406);
 });
 
-app.use('/auth', verifyApiKey, require('./router/auth.router'));
-app.use('/users', verifyToken, require('./router/users.router'));
+app.use('/auth', verifyApiKey, require('./routers/auth.router'));
+app.use('/users', verifyToken, require('./routers/users.router'));
 
 app.listen(port, () => {
   console.log(`Just doing magic for Vitta on port ${port}`);
