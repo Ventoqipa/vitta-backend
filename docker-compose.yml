@@ -38,3 +38,5 @@ volumes:
 networks:
   backend:
     driver: bridge
+extra_hosts:
+  - "host.docker.internal:host-gateway"
