@@ -29,6 +29,12 @@ app.use('/users', verifyToken, require('./routers/users.router'));
 
 app.listen(port, () => {
   console.log(`Just doing magic for Vitta on port ${port}`);
-  db.migrate.latest().then(() => console.log("Migrated")).catch((e) => console.error(e.message));
+  db.migrate.latest()
+    .then(async() => {
+      console.log("Migrated");
+      await db.seed.run();
+      console.log("Seed");
+    })
+    .catch((e) => console.error(e.message));
 });
 
