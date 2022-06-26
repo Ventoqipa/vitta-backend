@@ -1,7 +1,8 @@
-
 const express = require('express');
 const bodyparser = require('body-parser');
 const path = require('path');
+const db = require('./Tools/db-config.tool');
+
 const {verifyToken,verifyApiKey} = require('./middleware/requestValidator.middleware')
 
 require('dotenv').config();
@@ -28,5 +29,6 @@ app.use('/users', verifyToken, require('./routers/users.router'));
 
 app.listen(port, () => {
   console.log(`Just doing magic for Vitta on port ${port}`);
+  db.migrate.latest().then(() => console.log("Migrated")).catch((e) => console.error(e.message));
 });
 

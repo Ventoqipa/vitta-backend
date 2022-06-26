@@ -11,6 +11,8 @@ services:
       - '5432:5432'
     volumes:
       - db:/var/lib/postgresql/data
+    networks:
+      - backend
   api:
     image: vitta-api
     build: .
