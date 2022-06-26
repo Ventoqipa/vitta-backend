@@ -1,4 +1,4 @@
-const {cleaning, Cleaning} = require('../../Tools/cleaning.tool');
+const {Cleaning} = require('../../Tools/cleaning.tool');
 class ApiResponse {
     DEFAULT_ERROR_CODE = 500;
     DEFAULT_ERROR_MESSAGE = 'Error';
@@ -32,13 +32,24 @@ class ApiResponse {
         return this;
     }
 
-    sendAsJson() {
-        this.response?.status(this.#code);
-        const data = {
+    badRequest(entryData) {
+        this.#success = false;
+        this.#code = this.BAD_REQUEST_CODE;
+        this.#data = entryData || 'Bad request';
+        return this;
+    }
+
+    #serialize() {
+        return {
             "done": this.#success,
             "error" : this.#error?? null,
             "data": this.#data?? null
         }
+    }
+
+    sendAsJson() {
+        this.response?.status(this.#code);
+        const data = this.#serialize();
         this.#response?.json( Cleaning.cleanNulls(data) );
     }
 }
