@@ -26,7 +26,17 @@ router.get('/', async (req, res) => {
     }
 });
 
-
+/**
+ * @route POST /users
+ * @group Users
+ * @param {string} name.required - User name
+ * @param {string} email.required - User email
+ * @param {string} birthday.required - User birthday in format MM-DD-YYYY
+ * @param {string} gender.required - User gender in numeric value where 1 = 'male', 2 = 'female' and 0 = 'Not specified'
+ * @returns {object} 200 - done: true <br> data: [{user data}, {user data}, ...]
+ * @returns {object} 500 - done: false<br>error: 'Some error'
+ * @returns {string} 403 - Not authorized, use Bearer JWT authorization
+ */
 router.post('/', async(req, res) => {
     const apiResponse = new ApiResponse(res);
     try {
