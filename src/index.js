@@ -10,40 +10,49 @@ require('dotenv').config();
 
 const port = process.env.PORT;
 const app = express();
+const expressSwagger = require('express-swagger-generator')(app);
 
+let options = {
+    swaggerDefinition: {
+        info: {
+            description: 'This the Vitta API documentation.',
+            title: 'Swagger',
+            version: '3.0.0',
+        },
+        host: `localhost:${process.env.PORT}`,
+        basePath: '/',
+        produces: [
+            "application/json"
+        ],
+        schemes: ['http', 'https'],
+        securityDefinitions: {
+            basic : {
+              type: 'basic',
+                in: 'header',
+                name: 'Authorization',
+                description: ""
+            }
+        }
+    },
+    basedir: __dirname, //app absolute path
+    files: ['./routers/*.js'] //Path to the API handle folder
+};
+expressSwagger(options);  
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 
-
-app.get('/', (req, res) => {
-  const accepted = req.accepts(["json","html"]);
-  if(accepted.includes("html"))
-    res.sendFile( path.join(__dirname, 'index.html') );
-  else if(accepted.includes("json")){
-    const response = new ApiResponse(res);
-    response.success( {
-      "name" : 'Vitta API',
-      "version" : "0.1.0",
-      "owner" : "Ventoqipa"
-    } );
-    response.sendAsJson();
-    //res.sendFile( path.join(__dirname, 'index.json') );
-  }
-  else
-    res.sendStatus(406);
-});
-
+app.use('/', require('./routers/app.router'));
 app.use('/auth', verifyApiKey, require('./routers/auth.router'));
 app.use('/users', verifyToken, require('./routers/users.router'));
 
 app.listen(port, () => {
   console.log(`Just doing magic for Vitta on port ${port}`);
-  db.migrate.latest()
+  /*db.migrate.latest()
     .then(async() => {
       console.log("Migrated");
       await db.seed.run();
       console.log("Seed");
     })
-    .catch((e) => console.error(e.message));
+    .catch((e) => console.error(e.message));*/
 });
 

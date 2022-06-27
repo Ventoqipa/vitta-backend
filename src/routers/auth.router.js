@@ -3,6 +3,15 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const ApiResponse = require('../Entity/Responses/api.response');
 
+/**
+ * @route POST /auth/login
+ * @group Auth
+ * @param {string} email.required - username or email - eg: user@domain
+ * @param {string} password.required - user's password.
+ * @returns {object} 200 - done: true <br> data: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXV'
+ * @returns {object} 500 - done: false<br>error: 'Some error'
+ * @returns {string} 403 - Not authorized, use API KEY authorization
+ */
 router.post('/login', (req, res) => {
     const apiResponse = new ApiResponse(res);
     const token = jwt.sign({
@@ -12,8 +21,6 @@ router.post('/login', (req, res) => {
     
     res.header('auth-token', token);
     apiResponse.success(token).sendAsJson();
-
-
 })
 
 module.exports = router;
