@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
+const path = require('path');
 const ApiResponse = require('../Entity/Responses/api.response');
 
 /**
@@ -8,10 +8,10 @@ const ApiResponse = require('../Entity/Responses/api.response');
  * @group Health check
  * @returns {ApiResponse} 200 - done: true,<br> data: {api info}
  */
- router.get('/', (req, res) => {
+router.get('/', (req, res) => {
     const accepted = req.accepts(["json","html"]);
     if(accepted.includes("html"))
-        res.sendFile( path.join(__dirname, 'index.html') );
+        res.sendFile( path.join(__dirname, '..', 'index.html') );
     else if(accepted.includes("json")){
         const response = new ApiResponse(res);
         response.success( {
