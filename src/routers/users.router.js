@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {ApiResponse} = require('../Entity/Responses/api.response');
+const ApiResponse = require('../Entity/Responses/api.response');
 const {User} = require('../Entity/Models/user.model');
 
 

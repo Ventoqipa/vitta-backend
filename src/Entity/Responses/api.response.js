@@ -53,4 +53,4 @@ class ApiResponse {
         this.#response?.json( Cleaning.cleanNulls(data) );
     }
 }
-module.exports = {ApiResponse};
+module.exports = ApiResponse;

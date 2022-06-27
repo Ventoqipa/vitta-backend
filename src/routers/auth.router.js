@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const {ApiResponse} = require('../Entity/Responses/api.response');
+const ApiResponse = require('../Entity/Responses/api.response');
 
 router.post('/login', (req, res) => {
     const apiResponse = new ApiResponse(res);

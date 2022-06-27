@@ -2,6 +2,7 @@ const express = require('express');
 const bodyparser = require('body-parser');
 const path = require('path');
 const db = require('./Tools/db-config.tool');
+const ApiResponse = require('./Entity/Responses/api.response');
 
 const {verifyToken,verifyApiKey} = require('./middleware/requestValidator.middleware')
 
@@ -18,8 +19,16 @@ app.get('/', (req, res) => {
   const accepted = req.accepts(["json","html"]);
   if(accepted.includes("html"))
     res.sendFile( path.join(__dirname, 'index.html') );
-  else if(accepted.includes("json"))
-    res.sendFile( path.join(__dirname, 'index.json') );
+  else if(accepted.includes("json")){
+    const response = new ApiResponse(res);
+    response.success( {
+      "name" : 'Vitta API',
+      "version" : "0.1.0",
+      "owner" : "Ventoqipa"
+    } );
+    response.sendAsJson();
+    //res.sendFile( path.join(__dirname, 'index.json') );
+  }
   else
     res.sendStatus(406);
 });
