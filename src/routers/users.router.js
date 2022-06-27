@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ApiResponse = require('../Entity/Responses/api.response');
-const {User} = require('../Entity/Models/user.model');
+const UsersService = require('../Services/users.service');
 
 /**
  * @route GET /users
@@ -12,9 +12,8 @@ const {User} = require('../Entity/Models/user.model');
  */
 router.get('/', async (req, res) => {
     const apiResponse = new ApiResponse(res);
-    const user = new User();
     try {
-        const {done, data, error} = await user.fetchAll();
+        const {done, data, error} = await UsersService.listUsers();
         if( done ) {
             apiResponse.success( data );
         } else {
@@ -28,9 +27,20 @@ router.get('/', async (req, res) => {
 });
 
 
-router.post('/', (req, res) => {
+router.post('/', async(req, res) => {
     const apiResponse = new ApiResponse(res);
-    apiResponse.success(req.body).sendAsJson();
+    try {
+        const {done, data, error} = await UsersService.addUser( req.body );
+        if( done ) {
+            apiResponse.success( data );
+        } else {
+            apiResponse.error(error);
+        }
+    } catch (failed) {
+        apiResponse.error(failed.message);
+    } finally {
+        apiResponse.sendAsJson();
+    }
 });
 
 module.exports = router;

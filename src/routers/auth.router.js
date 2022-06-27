@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const ApiResponse = require('../Entity/Responses/api.response');
+const PasswordManagerService = require('../Services/passwordEncrypt.service');
 
 /**
  * @route POST /auth/login
@@ -14,6 +15,7 @@ const ApiResponse = require('../Entity/Responses/api.response');
  */
 router.post('/login', (req, res) => {
     const apiResponse = new ApiResponse(res);
+    passwordMngr = new PasswordManagerService(req.body.password);
     const token = jwt.sign({
         name: "julio.sanjuan",
         id: 1

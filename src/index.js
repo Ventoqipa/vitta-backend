@@ -1,8 +1,6 @@
 const express = require('express');
 const bodyparser = require('body-parser');
-const path = require('path');
 const db = require('./Tools/db-config.tool');
-const ApiResponse = require('./Entity/Responses/api.response');
 
 const {verifyToken,verifyApiKey} = require('./middleware/requestValidator.middleware')
 

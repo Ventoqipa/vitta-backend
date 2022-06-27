@@ -1,4 +1,4 @@
-class ModelResponse {
+class ServiceResponse {
     #success = false;
     #data = null;
     #error = null;
@@ -21,10 +21,6 @@ class ModelResponse {
             "error" : this.#error?? null,
             "data": this.#data?? null
         }
-    }    
-
-    output() {
-        return this.#data || this.#error;
     }
 }
-module.exports = ModelResponse;
+module.exports = ServiceResponse;
