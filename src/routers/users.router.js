@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const ApiResponse = require('../Entity/Responses/api.response');
 const UsersService = require('../Services/users.service');
+const PasswordManager =  require('../Services/password.service');
 
 /**
  * @route GET /users
@@ -40,7 +41,9 @@ router.get('/', async (req, res) => {
 router.post('/', async(req, res) => {
     const apiResponse = new ApiResponse(res);
     try {
-        const {done, data, error} = await UsersService.addUser( req.body );
+        const encrypted = PasswordManager.encrypt( req.body.password );
+        if( !encrypted.done )   throw new Error( encrypted.error );
+        const {done, data, error} = await UsersService.addUser( {...req.body, "password" : encrypted.data } );
         if( done ) {
             apiResponse.success( data );
         } else {

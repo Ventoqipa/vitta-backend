@@ -13,7 +13,7 @@ class PasswordManager {
 
     validate(password) {
         if(!password
-            || !password.length < this.MIN_PASSWORD_LENGTH
+            || password.length < this.MIN_PASSWORD_LENGTH
         ) return false;
         else return true;
     }
@@ -21,7 +21,7 @@ class PasswordManager {
     encrypt(password) {
         const response = new ServiceResponse();
         try {
-            if( !this.validate() ) {
+            if( !this.validate(password) ) {
                 response.error( "Invalid password" );
             } else {
                 response.success( this.#cipher.encrypt( password ) );
@@ -51,7 +51,7 @@ class PasswordManager {
             if(decrypted.data === password){
                 return response.success(password).serialize();
             } else {
-                return response.success("Password does not match.").serialize();
+                return response.error("PWD_NOT_MATCH").serialize();
             }
         } else {
             return response.error(password).serialize();
@@ -60,4 +60,4 @@ class PasswordManager {
 
 }
 
-module.exports = PasswordManager;
+module.exports = new PasswordManager();

@@ -19,6 +19,23 @@ class UsersService {
         }
     }
 
+    async getById(searched, excluded = []) {
+        let response = new ServiceResponse();
+        try {
+            const user = new User();
+            let {done, error, data} = await user.findBy("id", searched, excluded);
+            if(done) {
+                if(typeof data == null) response.error(error);
+                else response.success(data);
+            }
+            else response.error(error);
+        } catch (error) {
+            response.error( error.message );
+        } finally {
+            return response.serialize();
+        }
+    }
+
     async addUser(requestData) {
         let response = new ServiceResponse();
         try {
@@ -33,6 +50,22 @@ class UsersService {
         }
     }
 
+    async getByEmail(searched) {
+        let response = new ServiceResponse();
+        try {
+            const user = new User();
+            let {done, error, data} = await user.findBy("email", searched);
+            if(done) {
+                if(typeof data == null) response.error(error)
+                else response.success(data);
+            }
+            else response.error(error);
+        } catch (error) {
+            response.error( error.message );
+        } finally {
+            return response.serialize();
+        }
+    }
 }
 
 module.exports = new UsersService();

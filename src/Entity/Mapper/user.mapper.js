@@ -9,6 +9,8 @@ class UserMapper {
     #createdAt = null;
     #updatedAt = null;
 
+    #columns = ["id", "name", "email", "birthday", "password", "gender", "created_at", "updated_at"];
+
     constructor() {
 
     }
@@ -31,9 +33,13 @@ class UserMapper {
             name: this.#name,
             email: this.#email,
             birthday: this.#birthday,
-            password: "#########",
+            password: this.#password,
             gender: this.#gender
         }
+    }
+
+    columns(excluded = []) {
+        return this.#columns.filter(column => !excluded.includes(column) );
     }
 
 }
