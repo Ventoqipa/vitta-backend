@@ -28,6 +28,30 @@ router.get('/', async (req, res) => {
 });
 
 /**
+ * @route GET /users/:id
+ * @group Users
+ * @param {numeric} id.path - The id of the user
+ * @returns {object} 200 - done: true <br> data: {user data}
+ * @returns {object} 500 - done: false<br>error: 'Some error'
+ * @returns {string} 403 - Not authorized, use Bearer JWT authorization
+ */
+ router.get('/:id', async (req, res) => {
+    const apiResponse = new ApiResponse(res);
+    try {
+        const {done, data, error} = await UsersService.getById( req.params.id );
+        if( done ) {
+            apiResponse.success( data );
+        } else {
+            apiResponse.error(error);
+        }
+    } catch (failed) {
+        apiResponse.error(failed.message);
+    } finally {
+        apiResponse.sendAsJson();
+    }
+});
+
+/**
  * @route POST /users
  * @group Users
  * @param {string} name.required - User name

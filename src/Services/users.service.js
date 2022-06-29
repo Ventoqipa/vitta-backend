@@ -19,7 +19,7 @@ class UsersService {
         }
     }
 
-    async getById(searched, excluded = []) {
+    async getById(searched, excluded) {
         let response = new ServiceResponse();
         try {
             const user = new User();

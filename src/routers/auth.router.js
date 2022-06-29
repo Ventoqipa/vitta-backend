@@ -22,7 +22,7 @@ router.post('/login', async(req, res) => {
         if(!done) {
             throw new Error("USR_NOT_FOUND")
         }
-        const user = await UsersService.getById( data.id );
+        const user = await UsersService.getById( data.id, ['id'] );
         const matchPassword = PasswordManager.compare( req.body.password, user.data.password );
         if( !matchPassword.done ) {
             throw new Error(matchPassword.error);
