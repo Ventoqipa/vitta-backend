@@ -42,15 +42,16 @@ app.use(bodyparser.json());
 app.use('/', require('./routers/app.router'));
 app.use('/auth', verifyApiKey, require('./routers/auth.router'));
 app.use('/users', verifyToken, require('./routers/users.router'));
+app.use('/resources', verifyApiKey, require('./routers/resources.router'));
 
 app.listen(port, () => {
   console.log(`Just doing magic for Vitta on port ${port}`);
-  /*db.migrate.latest()
+  db.migrate.latest()
     .then(async() => {
       console.log("Migrated");
       await db.seed.run();
       console.log("Seed");
     })
-    .catch((e) => console.error(e.message));*/
+    .catch((e) => console.error(e.message));
 });
 
