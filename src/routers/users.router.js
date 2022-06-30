@@ -3,6 +3,7 @@ const router = express.Router();
 const ApiResponse = require('../Entity/Responses/api.response');
 const UsersService = require('../Services/users.service');
 const PasswordManager =  require('../Services/password.service');
+const AccountService = require('../Services/accounts.service');
 
 /**
  * @route GET /users
@@ -69,7 +70,17 @@ router.post('/', async(req, res) => {
         if( !encrypted.done )   throw new Error( encrypted.error );
         const {done, data, error} = await UsersService.addUser( {...req.body, "password" : encrypted.data } );
         if( done ) {
-            apiResponse.success( data );
+            const userId = data[0]?.id??null;
+            const created = await AccountService.add( {
+                userId : userId,
+                accountType: 2,
+                isActive: true
+            } );
+            if(created.done) {
+                apiResponse.success( data.pop() );
+            } else {
+                apiResponse.error(created.error);
+            }
         } else {
             apiResponse.error(error);
         }

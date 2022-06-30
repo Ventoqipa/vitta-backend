@@ -5,6 +5,7 @@ const ApiResponse = require('../Entity/Responses/api.response');
 const AuthService = require('../Services/auth.service');
 const UsersService = require('../Services/users.service');
 const PasswordManager =  require('../Services/password.service');
+const AccountsService = require('../Services/accounts.service');
 
 /**
  * @route POST /auth/login
@@ -27,27 +28,25 @@ router.post('/login', async(req, res) => {
         if( !matchPassword.done ) {
             throw new Error(matchPassword.error);
         }
+        const account = await AccountsService.getByUserId( user.data.id, [] );
+        if(!account.done) {
+            throw new Error(account.error);
+        }
         const token = jwt.sign({
             email: user.data.email,
-            id: user.data.id
+            id: user.data.id,
+            account: account.data.id
         }, process.env.AUTH_SECRET);
         
         res.header('Authorized-Token', token);
 
-        apiResponse.success( user.data.id );
+        apiResponse.success( token );
 
     } catch (error) {
         apiResponse.error( error.message );
     } finally {
         apiResponse.sendAsJson();
     }
-    /*const token = jwt.sign({
-        name: "julio.sanjuan",
-        id: 1
-    }, process.env.AUTH_SECRET)*/
-    
-    //res.header('auth-token', token);
-    //apiResponse.success(token).sendAsJson();
 })
 
 module.exports = router;
