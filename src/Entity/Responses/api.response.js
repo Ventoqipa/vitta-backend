@@ -6,6 +6,7 @@ class ApiResponse {
     DEFAULT_SUCCESS_CODE = 200;
 
     BAD_REQUEST_CODE = 400;
+    NOT_FOUND_CODE = 404;
 
     #success = false;
     #code = null;
@@ -32,6 +33,13 @@ class ApiResponse {
         return this;
     }
 
+    notFound(resource) {
+        this.#success = false;
+        this.#code = this.NOT_FOUND_CODE;
+        this.#data = resource || 'Not found';
+        return this;
+    }
+
     badRequest(entryData) {
         this.#success = false;
         this.#code = this.BAD_REQUEST_CODE;
@@ -48,7 +56,7 @@ class ApiResponse {
     }
 
     sendAsJson() {
-        this.response?.status(this.#code);
+        this.#response?.status(this.#code);
         const data = this.#serialize();
         this.#response?.json( Cleaning.cleanNulls(data) );
     }
