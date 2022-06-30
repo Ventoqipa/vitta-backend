@@ -9,10 +9,10 @@ exports.up = function(knex) {
         table.string('email').notNullable();
         table.date('birthday').notNullable();
         table.string('password').notNullable();
-        table.tinyint('gender').notNullable().defaultTo(0);
+        table.tinyint('gender').notNullable().defaultTo(0).references("value").inTable("gender").onDelete("CASCADE");
         table.timestamp('created_at').defaultTo(knex.fn.now())
         table.timestamp('updated_at').defaultTo(knex.fn.now())
-    })
+    });
 };
 
 /**
