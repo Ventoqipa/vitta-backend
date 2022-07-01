@@ -7,8 +7,14 @@ class ModelFactory {
      * @var {list} LIST List of available models to factory with
      */
     #LIST = {
-        "gender" : {"className": Gender, "params": []},
-        "account" : {"className": Catalog, "params": ["account_types"]}
+        "genders" : {"className": Gender, "params": []},
+        "accounts" : {"className": Catalog, "params": ["account_types"]},
+        "illnesses" : {"className": Catalog, "params": ["illness_types"]},
+        "moods" : {"className": Catalog, "params": ["mood_types"]},
+        "measurements" : {"className": Catalog, "params": ["measurement_types"]},
+        "icons" : {"className": Catalog, "params": ["icon_types"]},
+        "actions" : {"className": Catalog, "params": ["action_types"]},
+        "doses" : {"className": Catalog, "params": ["dose_types"]},
     }
 
     /**
