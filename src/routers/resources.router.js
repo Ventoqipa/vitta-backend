@@ -18,7 +18,7 @@ router.get('/:name', async (req, res) => {
         if( done ) {
             apiResponse.success( data );
         } else {
-            apiResponse.notFound( req.params.name );
+            apiResponse.notFound( error );
         }
     } catch (failed) {
         apiResponse.error(failed.message);

@@ -2,32 +2,10 @@ const express = require('express');
 const router = express.Router();
 const ApiResponse = require('../Entity/Responses/api.response');
 const AlarmsService = require('../Services/alarms.service');
+const TextTransform = require("../Tools/text-transform.tool");
 
 /**
- * @route GET /users
- * @group alarms
- * @returns {object} 200 - done: true <br> data: [{alarm data}, {alarm data}, ...]
- * @returns {object} 500 - done: false<br>error: 'Some error'
- * @returns {string} 403 - Not authorized, use Bearer JWT authorization
- */
-router.get('/', async (req, res) => {
-    const apiResponse = new ApiResponse(res);
-    try {
-        const {done, data, error} = await UsersService.listUsers();
-        if( done ) {
-            apiResponse.success( data );
-        } else {
-            apiResponse.error(error);
-        }
-    } catch (failed) {
-        apiResponse.error(failed.message);
-    } finally {
-        apiResponse.sendAsJson();
-    }
-});
-
-/**
- * @route GET /users/:id
+ * @route GET /alarms/:id
  * @group Alarms
  * @param {numeric} id.path - The id of the alarm
  * @returns {object} 200 - done: true <br> data: {alarm data}
@@ -60,26 +38,22 @@ router.get('/', async (req, res) => {
 router.post('/', async(req, res) => {
     const apiResponse = new ApiResponse(res);
     try {
-        
+        req.body.alarm["account_id"] = req.user.account;
+        req.body.medicine["code"] = TextTransform.toVarName(req.body.medicine.name);
+        if( !req.body.medicine.code ) {
+            throw new Error("BAD_MEDICINE_NAME");
+        }
+        req.body.illness["code"] = TextTransform.toVarName(req.body.illness.name);
+        if( !req.body.illness.code ) {
+            throw new Error("BAD_ILLNESS_NAME");
+        }
 
-        /*const encrypted = PasswordManager.encrypt( req.body.password );
-        if( !encrypted.done )   throw new Error( encrypted.error );
-        const {done, data, error} = await UsersService.addUser( {...req.body, "password" : encrypted.data } );
+        const {done, error, data} = await AlarmsService.add(req.body);
         if( done ) {
-            const userId = data[0]?.id??null;
-            const created = await AccountService.add( {
-                userId : userId,
-                accountType: 2,
-                isActive: true
-            } );
-            if(created.done) {
-                apiResponse.success( data.pop() );
-            } else {
-                apiResponse.error(created.error);
-            }
+            apiResponse.success(data);
         } else {
             apiResponse.error(error);
-        } */
+        }
     } catch (failed) {
         apiResponse.error(failed.message);
     } finally {
