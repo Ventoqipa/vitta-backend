@@ -1,23 +1,15 @@
 const db = require('../../Tools/db-config.tool');
 const ModelResponse = require('../Responses/model.response');
-const MapperFactory = require('../Factory/mapper.factory');
+const MoodHistoryMapper = require('../Mapper/mood_history.mapper');
 
-class Model {    
-    TABLES_MAP = {
-        "medicines" : "medicines"
-    };
-    #table_name = null;
-    #model_name = null;
+class MoodHistory {    
+    #table_name = 'mood_history';
     #protected_fields = [];
-
-    constructor(modelName) {
-        this.#model_name = modelName;
-    }
 
     async fetchAll() {
         let dbResponse = new ModelResponse();
         try {
-            let mapper = new MapperFactory( this.#model_name );
+            let mapper = new MoodHistoryMapper();
             const users = await db.select( mapper.columns(this.#protected_fields) ).from(this.#table_name);
             dbResponse.success(users);
         } catch (e) {
@@ -30,12 +22,12 @@ class Model {
     async findBy(field, searched, excluded) {
         let dbResponse = new ModelResponse();
         try {
-            let mapper = new MedicineMapper();
+            let mapper = new MoodHistoryMapper();
             if(typeof excluded === "undefined") excluded = this.#protected_fields;
             const columns = [...mapper.columns(excluded), field];
-            const alarms = await db.select( columns ).from(this.#table_name).where(field, searched);
-            if(alarms)    dbResponse.success(alarms);
-            else dbResponse.error(alarms);
+            const user = await db.select( columns ).from(this.#table_name).where(field, searched).first();
+            if(user)    dbResponse.success(user);
+            else dbResponse.error(detail);
         } catch (e) {
             dbResponse.error(e.message);
         } finally {
@@ -46,8 +38,8 @@ class Model {
     async insert(data) {
         let dbResponse = new ModelResponse();
         try {
-            let mapper = new MedicineMapper();
-            userMapper.populate(data);
+            let mapper = new MoodHistoryMapper();
+            mapper.populate(data);
             let {inserted, detail} = await (
                     new Promise( (resolve) => {
                         db(this.#table_name).insert( mapper.map() ).returning('id')
@@ -59,7 +51,7 @@ class Model {
                             })
                     })
             );
-            if(inserted)    dbResponse.success(detail);
+            if(inserted)    dbResponse.success(detail.pop());
             else dbResponse.error(detail);
         } catch (e) {
             dbResponse.error(e.message);
@@ -71,5 +63,5 @@ class Model {
 
 
 
-module.exports = Model;
+module.exports = MoodHistory;
 

@@ -1,6 +1,7 @@
 const Gender = require("../Models/gender.model");
 const ModelResponse = require('../Responses/model.response');
 const Catalog = require('../Models/catalog.model');
+const GenericModel = require('../Models/generic.model');
 
 class ModelFactory {    
     /**
@@ -9,12 +10,13 @@ class ModelFactory {
     #LIST = {
         "genders" : {"className": Gender, "params": []},
         "accounts" : {"className": Catalog, "params": ["account_types"]},
-        "illnesses" : {"className": Catalog, "params": ["illness_types"]},
+        "illnesses" : {"className": GenericModel, "params": ["illnesses"]},
+        "medicines" : {"className": GenericModel, "params": ["medicines"]},
         "moods" : {"className": Catalog, "params": ["mood_types"]},
         "measurements" : {"className": Catalog, "params": ["measurement_types"]},
         "icons" : {"className": Catalog, "params": ["icon_types"]},
         "actions" : {"className": Catalog, "params": ["action_types"]},
-        "doses" : {"className": Catalog, "params": ["dose_types"]},
+        "doses" : {"className": Catalog, "params": ["dose_types"]}, 
     }
 
     /**

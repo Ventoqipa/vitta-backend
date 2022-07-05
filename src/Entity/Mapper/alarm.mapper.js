@@ -3,23 +3,23 @@ const db = require('../../Tools/db-config.tool');
 class AlarmMapper {    
     #id = null;
     #accountId = null;
-    #illnessType = null;
-    #medicineId = null;
+    #illnessCode = null;
+    #medicineCode = null; 
     #createdAt = null;
     #updatedAt = null;
 
-    #columns = ["id", "account_id", "illness_type", "medicine", "created_at", "updated_at"];
+    #columns = ["id", "account_id", "illness", "medicine", "created_at", "updated_at"];
 
     constructor() {
 
     }
 
     populate(userData) {
-        let {id, account_id, illness_type, medicine_id, createdAt, updatedAt} = userData;
+        let {id, account_id, illness_code, medicine_code, createdAt, updatedAt} = userData;
         this.#id = id??null;
         this.#accountId = account_id??null;
-        this.#illnessType = illness_type??null;
-        this.#medicineId = medicine_id??null;
+        this.#illnessCode = illness_code??null;
+        this.#medicineCode = medicine_code??null;
         this.#createdAt = createdAt??null;
         this.#updatedAt = updatedAt??null;
         return this;
@@ -28,8 +28,8 @@ class AlarmMapper {
     map() {
         return {
             account_id: this.#accountId,
-            illness_type: this.#illnessType,
-            medicine: this.#medicineId
+            illness_code: this.#illnessCode,
+            medicine_code: this.#medicineCode
         }
     }
 

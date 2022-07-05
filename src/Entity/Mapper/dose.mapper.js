@@ -5,10 +5,12 @@ class DoseMapper {
     #alarmId = null;
     #doseType = null;
     #measurementType = null;
+    #iconType = null;
     #quantity = null;
     #grammage = null;
     #period = null;
     #duration = null;
+    #first_take = null;
     #createdAt = null;
     #updatedAt = null;
 
@@ -19,11 +21,12 @@ class DoseMapper {
     }
 
     populate(userData) {
-        let {id, alarm_id, dose_type, measurement_type, quantity, grammage, period, duration, first_take, createdAt, updatedAt} = userData;
+        let {id, alarm_id, dose_type, measurement_type, icon_type, quantity, grammage, period, duration, first_take, createdAt, updatedAt} = userData;
         this.#id = id??null;
         this.#alarmId = alarm_id??null;
         this.#doseType = dose_type??null;
         this.#measurementType = measurement_type??null;
+        this.#iconType = icon_type??null;
         this.#quantity = quantity??null;
         this.#grammage = grammage??null;
         this.#period = period??null;
@@ -39,6 +42,7 @@ class DoseMapper {
             alarm_id:this.#alarmId??null,
             dose_type:this.#doseType??null,
             measurement_type:this.#measurementType??null,
+            icon_type : this.#iconType??null,
             quantity:this.#quantity??null,
             grammage: this.#grammage??null,
             period: this.#period??null,

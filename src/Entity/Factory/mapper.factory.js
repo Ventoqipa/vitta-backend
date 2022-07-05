@@ -1,13 +1,15 @@
 const Gender = require("../Models/gender.model");
 const ModelResponse = require('../Responses/model.response');
 const MedicineMapper = require('../Mapper/medicine.mapper');
+const IllnessMapper = require('../Mapper/illness.mapper');
 
 class MapperFactory {    
     /**
      * @var {list} LIST List of available mappers to factory with
      */
     #LIST = {
-        "medicine" : {"className": MedicineMapper, "params": []}
+        "medicines" : {"className": MedicineMapper, "params": []},
+        "illnesses" : {"className": IllnessMapper, "params": []},
     }
 
     /**

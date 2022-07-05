@@ -10,8 +10,8 @@ class Alarm {
         let dbResponse = new ModelResponse();
         try {
             let mapper = new AlarmMapper();
-            const users = await db.select( mapper.columns(this.#protected_fields) ).from(this.#table_name);
-            dbResponse.success(users);
+            const alarms = await db.select( mapper.columns(this.#protected_fields) ).from(this.#table_name);
+            dbResponse.success(alarms);
         } catch (e) {
             dbResponse.error(e.message);
         } finally {
@@ -39,7 +39,7 @@ class Alarm {
         let dbResponse = new ModelResponse();
         try {
             let mapper = new AlarmMapper();
-            userMapper.populate(data);
+            mapper.populate(data);
             let {inserted, detail} = await (
                     new Promise( (resolve) => {
                         db(this.#table_name).insert( mapper.map() ).returning('id')
@@ -51,7 +51,7 @@ class Alarm {
                             })
                     })
             );
-            if(inserted)    dbResponse.success(detail);
+            if(inserted)    dbResponse.success(detail.pop());
             else dbResponse.error(detail);
         } catch (e) {
             dbResponse.error(e.message);
