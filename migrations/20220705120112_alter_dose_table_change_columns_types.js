@@ -3,10 +3,9 @@
  * @returns { Promise<void> }
  */
 exports.up = function(knex) {
-    return knex.schema.createTable('illness_types', function(table) {
-        table.increments();
-        table.integer('value').notNullable().unique();
-        table.string('label').notNullable();
+    return knex.schema.alterTable('doses', function(table) {
+        table.string('period').notNullable().alter();
+        table.string('duration').notNullable().alter();
     });
 };
 
