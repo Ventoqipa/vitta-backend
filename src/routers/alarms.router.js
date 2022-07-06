@@ -5,7 +5,7 @@ const AlarmsService = require('../Services/alarms.service');
 const TextTransform = require("../Tools/text-transform.tool");
 
 /**
- * @route GET /alarms/:id
+ * @route GET /alarms/
  * @group Alarms
  * @returns {object} 200 - done: true <br> data: [{alarm data}, {alarm data}] 
  * @returns {object} 500 - done: false<br>error: 'Some error'
@@ -39,12 +39,15 @@ const TextTransform = require("../Tools/text-transform.tool");
     const apiResponse = new ApiResponse(res);
     try {
         const alarm = await AlarmsService.getById( req.params.id );
-        if(!alarm.done) throw new Error(alarm.error);
-        const alarmDetail = await AlarmsService.getRelatedData( alarm.data[0] );
-        if( alarmDetail.done ) {
-            apiResponse.success( alarmDetail.data );
+        if( alarm.done ) {
+            const alarmDetail = await AlarmsService.getRelatedData( alarm.data[0] );
+            if( alarmDetail.done ) {
+                apiResponse.success( alarmDetail.data );
+            } else {
+                apiResponse.error( alarmDetail.error );
+            }
         } else {
-            apiResponse.error( alarmDetail.error );
+            apiResponse.notFound( alarm.error );
         }
     } catch (failed) {
         apiResponse.error(failed.message);

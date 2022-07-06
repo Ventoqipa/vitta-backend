@@ -17,7 +17,8 @@ class AlarmsService {
         try {
             const alarm = new Alarm();
             let alarms = await alarm.findBy("account_id", accontId);
-            response.success(alarms);
+            if(!alarms.done) throw new Error(alarms.error);
+            response.success(alarms.data);
         } catch (error) {
             response.error(error.message);
         } finally{
@@ -30,11 +31,9 @@ class AlarmsService {
         try {
             const alarm = new Alarm();
             let {done, error, data} = await alarm.findBy("id", searched, excluded);
-            if(done) {
-                if(typeof data == null) response.error(error);
-                else response.success(data);
-            }
-            else response.error(error);
+            if(error) throw new Error(error);
+            if(!data || !data.length) throw new Error("NOT_FOUND");
+            response.success(data);
         } catch (error) {
             response.error( error.message );
         } finally {
