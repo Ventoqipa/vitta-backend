@@ -7,6 +7,29 @@ const TextTransform = require("../Tools/text-transform.tool");
 /**
  * @route GET /alarms/:id
  * @group Alarms
+ * @returns {object} 200 - done: true <br> data: [{alarm data}, {alarm data}] 
+ * @returns {object} 500 - done: false<br>error: 'Some error'
+ * @returns {string} 403 - Not authorized, use Bearer JWT authorization
+ */
+ router.get('/', async (req, res) => {
+    const apiResponse = new ApiResponse(res);
+    try {
+        const {done, data, error} = await AlarmsService.list( req.user.account );
+        if( done ) {
+            apiResponse.success( data );
+        } else {
+            apiResponse.error(error);
+        }
+    } catch (failed) {
+        apiResponse.error(failed.message);
+    } finally {
+        apiResponse.sendAsJson();
+    }
+});
+
+/**
+ * @route GET /alarms/:id
+ * @group Alarms
  * @param {numeric} id.path - The id of the alarm
  * @returns {object} 200 - done: true <br> data: {alarm data}
  * @returns {object} 500 - done: false<br>error: 'Some error'
@@ -15,11 +38,13 @@ const TextTransform = require("../Tools/text-transform.tool");
  router.get('/:id', async (req, res) => {
     const apiResponse = new ApiResponse(res);
     try {
-        const {done, data, error} = await UsersService.getById( req.params.id );
-        if( done ) {
-            apiResponse.success( data );
+        const alarm = await AlarmsService.getById( req.params.id );
+        if(!alarm.done) throw new Error(alarm.error);
+        const alarmDetail = await AlarmsService.getRelatedData( alarm.data[0] );
+        if( alarmDetail.done ) {
+            apiResponse.success( alarmDetail.data );
         } else {
-            apiResponse.error(error);
+            apiResponse.error( alarmDetail.error );
         }
     } catch (failed) {
         apiResponse.error(failed.message);

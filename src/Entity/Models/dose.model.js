@@ -22,9 +22,9 @@ class Dose {
     async findBy(field, searched, excluded) {
         let dbResponse = new ModelResponse();
         try {
-            let userMapper = new UserMapper();
+            let mapper = new DoseMapper();
             if(typeof excluded === "undefined") excluded = this.#protected_fields;
-            const columns = [...userMapper.columns(excluded), field];
+            const columns = [...mapper.columns(excluded), field];
             const user = await db.select( columns ).from(this.#table_name).where(field, searched).first();
             if(user)    dbResponse.success(user);
             else dbResponse.error(detail);

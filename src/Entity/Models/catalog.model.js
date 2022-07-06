@@ -22,6 +22,22 @@ class Catalog {
             return dbResponse.output();
         }
     }
+
+    async findBy(field, searched, excluded) {
+        let dbResponse = new ModelResponse();
+        try {
+            let mapper = new CatalogMapper();
+            if(typeof excluded === "undefined") excluded = this.#protected_fields;
+            const columns = [...mapper.columns(excluded), field];
+            const user = await db.select( columns ).from(this.#table_name).where(field, searched).first();
+            if(user)    dbResponse.success(user);
+            else dbResponse.error(detail);
+        } catch (e) {
+            dbResponse.error(e.message);
+        } finally {
+            return dbResponse.serialize();
+        }
+    }
 }
 
 

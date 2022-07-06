@@ -8,7 +8,7 @@ class AlarmMapper {
     #createdAt = null;
     #updatedAt = null;
 
-    #columns = ["id", "account_id", "illness", "medicine", "created_at", "updated_at"];
+    #columns = ["id", "account_id", "illness_code", "medicine_code", "active", "created_at", "updated_at"];
 
     constructor() {
 

@@ -14,7 +14,7 @@ class DoseMapper {
     #createdAt = null;
     #updatedAt = null;
 
-    #columns = ["id", "alarm_id", "dose_type", "measurement_type", "quantity", "grammage", "period", "duration", "first_take", "created_at", "updated_at"];
+    #columns = ["id", "alarm_id", "dose_type", "measurement_type", "icon_type", "quantity", "grammage", "period", "duration", "first_take", "created_at", "updated_at"];
 
     constructor() {
 
