@@ -2,14 +2,17 @@ const express = require('express');
 const router = express.Router();
 const ApiResponse = require('../Entity/Responses/api.response');
 const ResourcesService = require('../Services/resources.service');
-const PasswordManager =  require('../Services/password.service');
 
 /**
- * @route GET /resources/:name
+ * @route GET /resources/{name}
  * @group Resources
- * @returns {object} 200 - done: true <br> data: [{value, label}, {value, label}, ...]
- * @returns {object} 500 - done: false<br>error: 'Some error'
- * @returns {string} 403 - Not authorized, use Bearer JWT authorization
+ * @param {enum} name.path - The name of the resource - eg: medicines,illnesses,doses,icons
+ * @returns {CatalogResponpse.model} 200 - The list of :name resource items
+ * @returns {NotFoundError.model} 404 - Resource not found
+ * @returns {ApiError.model} 500 - Some internal error
+ * @returns {NotAuthorization.model} 403 - Access denied
+ * @returns {Unauthorized.model} 401 - Access denied
+ * @security basic
  */
 router.get('/:name', async (req, res) => {
     const apiResponse = new ApiResponse(res);

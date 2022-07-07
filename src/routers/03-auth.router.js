@@ -2,26 +2,29 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const ApiResponse = require('../Entity/Responses/api.response');
-const AuthService = require('../Services/auth.service');
 const UsersService = require('../Services/users.service');
 const PasswordManager =  require('../Services/password.service');
 const AccountsService = require('../Services/accounts.service');
+const HttpException = require('http-exception')
 
 /**
  * @route POST /auth/login
  * @group Auth
- * @param {string} email.required - username or email - eg: user@domain
- * @param {string} password.required - user's password.
- * @returns {object} 200 - done: true <br> data: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXV'
- * @returns {object} 500 - done: false<br>error: 'Some error'
- * @returns {string} 403 - Not authorized, use API KEY authorization
+ * @param {LoginInput.model} json.body.required - The user mail and password
+ * @returns {TokenResponse.model} 200 - Returns the JWT token
+ * @returns {ApiError.model} 500 - An error was occurred
+ * @returns {NotAuthorization.model} 403 - Access denied
+ * @returns {Unauthorized.model} 401 - Access denied
+ * @security basic
  */
 router.post('/login', async(req, res) => {
     const apiResponse = new ApiResponse(res);
     try {
-        const {done, data} = await UsersService.getByEmail( req.body.username );
+        const {done, data, error} = await UsersService.getByEmail( req.body.username );
         if(!done) {
-            throw new Error("USR_NOT_FOUND")
+            if(error.includes("NOT_FOUND")) 
+                throw HttpException.createError({code: 404, message: "Not Found", status: 404});
+            else throw new Error(error);
         }
         const user = await UsersService.getById( data.id, ['id'] );
         const matchPassword = PasswordManager.compare( req.body.password, user.data.password );

@@ -6,7 +6,7 @@ const ApiResponse = require('../Entity/Responses/api.response');
 /**
  * @route GET /
  * @group Health check
- * @returns {ApiResponse} 200 - done: true,<br> data: {api info}
+ * @returns {HealthcheckResponse.model} 200 - The Healthcheck response
  */
 router.get('/', (req, res) => {
     const accepted = req.accepts(["json","html"]);

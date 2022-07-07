@@ -56,7 +56,7 @@ class UsersService {
             const user = new User();
             let {done, error, data} = await user.findBy("email", searched);
             if(done) {
-                if(typeof data == null) response.error(error)
+                if(!data) response.error("NOT_FOUND")
                 else response.success(data);
             }
             else response.error(error);

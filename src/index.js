@@ -10,6 +10,7 @@ const port = process.env.PORT;
 const app = express();
 const expressSwagger = require('express-swagger-generator')(app);
 
+
 let options = {
     swaggerDefinition: {
         info: {
@@ -17,7 +18,7 @@ let options = {
             title: 'Swagger',
             version: '3.0.0',
         },
-        host: `localhost:${process.env.PORT}`,
+        host: `${process.env.SWAGGER_HOST}`,
         basePath: '/',
         produces: [
             "application/json"
@@ -29,6 +30,11 @@ let options = {
                 in: 'header',
                 name: 'Authorization',
                 description: ""
+            },
+            bearer : {
+              type: "apiKey",
+              in: 'header',
+              name: 'Authorization',
             }
         }
     },
@@ -39,12 +45,12 @@ expressSwagger(options);
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 
-app.use('/', require('./routers/app.router'));
-app.use('/resources', verifyApiKey, require('./routers/resources.router'));
-app.use('/auth', verifyApiKey, require('./routers/auth.router'));
+app.use('/', require('./routers/01-app.router'));
+app.use('/resources', verifyApiKey, require('./routers/02-resources.router'));
+app.use('/auth', verifyApiKey, require('./routers/03-auth.router'));
 
-app.use('/users', verifyToken, require('./routers/users.router'));
-app.use('/alarms', verifyToken, require('./routers/alarms.router'));
+app.use('/users', verifyToken, require('./routers/04-users.router'));
+app.use('/alarms', verifyToken, require('./routers/05-alarms.router'));
 
 app.listen(port, () => {
   console.log(`Just doing magic for Vitta on port ${port}`);

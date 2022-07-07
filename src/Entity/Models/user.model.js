@@ -25,8 +25,7 @@ class User {
             if(typeof excluded === "undefined") excluded = this.#protected_fields;
             const columns = [...userMapper.columns(excluded), field];
             const user = await db.select( columns ).from(this.#table_name).where(field, searched).first();
-            if(user)    dbResponse.success(user);
-            else dbResponse.error(detail);
+            dbResponse.success(user);
         } catch (e) {
             dbResponse.error(e.message);
         } finally {
