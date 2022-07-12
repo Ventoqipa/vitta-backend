@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const ApiResponse = require('../Entity/Responses/api.response');
 const ResourcesService = require('../Services/resources.service');
+const HttpException = require('http-exception');
 
 /**
  * @route GET /resources/{name}
@@ -21,10 +22,11 @@ router.get('/:name', async (req, res) => {
         if( done ) {
             apiResponse.success( data );
         } else {
-            apiResponse.notFound( error );
+            if( error.includes('NOT_FOUND')) throw HttpException.createError({code: 404})
+            apiResponse.error( error );
         }
     } catch (failed) {
-        apiResponse.error(failed.message);
+        apiResponse.buildHttpError(failed);
     } finally {
         apiResponse.sendAsJson();
     }

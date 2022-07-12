@@ -35,6 +35,7 @@ class ModelFactory {
             let model = this.#models[ modelName ];
             if(!model) {
                 const modelData = this.#LIST[ modelName ];
+                if(!modelData) throw new Error("NOT_FOUND");
                 this.#models[ modelName ] = new modelData[ "className" ]( modelData[ "params" ] );
             } 
             response.success(this.#models[ modelName ] );

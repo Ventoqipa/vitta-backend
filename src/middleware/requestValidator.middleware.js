@@ -1,18 +1,25 @@
 const jwt = require('jsonwebtoken');
-var auth = require('basic-auth');
-var compare = require('tsscmp')
+const auth = require('basic-auth');
+const compare = require('tsscmp');
+const HttpException = require('http-exception');
+const ApiResponse = require('../Entity/Responses/api.response');
 
 
 const verifyToken = (req, res, next) => {
+    const apiResponse = new ApiResponse(res);
     const token = req.header('authorization');
-    if (!token) return res.status(401).json({ error: 'Acceso denegado' });
     try {
+        if (!token) throw HttpException.createError({code: 403});
         const cleanToken = token.split('Bearer').pop().trim();
+        if(!cleanToken || !cleanToken.length) throw HttpException.createError({code:403 });
         const verified = jwt.verify(cleanToken, process.env.AUTH_SECRET);
         req.user = verified;
         next();
     } catch (error) {
-        res.status(400).json({error: 'Token no es válido'});
+        let httpError = null;
+        if(error instanceof jwt.JsonWebTokenError)  httpError = HttpException.createError({code: 401});
+        else httpError = error;
+        apiResponse.buildHttpError( httpError ).sendAsJson();
     }
 }
 function check (username, password) {
@@ -20,21 +27,15 @@ function check (username, password) {
 }
 
 const verifyApiKey = (req, res, next) => {
-    var credentials = auth(req);
-    authorized = true;
-    if (!credentials) {
-        res.statusCode = 403;
-        authorized = false;
-        res.end('Acceso denegado, por favor solicite o configure correctamente su llave de aplicación (API KEY)');
-        return false;
-    } 
-    if(!check(credentials.name, credentials.pass)) {
-        res.statusCode = 401;
-        authorized = false;
-        res.end('Acceso denegado, proporcione sus credenciales correctas.');
-        return false;
+    const apiResponse = new ApiResponse(res);
+    try {
+        var credentials = auth(req);
+        if (!credentials) throw HttpException.createError({code: 403});
+        if(!check(credentials.name, credentials.pass)) throw HttpException.createError({code: 401});
+        next();
+    } catch (error) {
+        apiResponse.buildHttpError( error ).sendAsJson();
     }
-    next();     
 }
 
 module.exports = {verifyToken,verifyApiKey};

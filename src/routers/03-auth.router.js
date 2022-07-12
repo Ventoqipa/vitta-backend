@@ -5,7 +5,7 @@ const ApiResponse = require('../Entity/Responses/api.response');
 const UsersService = require('../Services/users.service');
 const PasswordManager =  require('../Services/password.service');
 const AccountsService = require('../Services/accounts.service');
-const HttpException = require('http-exception')
+const HttpException = require('http-exception');
 
 /**
  * @route POST /auth/login
@@ -23,8 +23,8 @@ router.post('/login', async(req, res) => {
         const {done, data, error} = await UsersService.getByEmail( req.body.username );
         if(!done) {
             if(error.includes("NOT_FOUND")) 
-                throw HttpException.createError({code: 404, message: "Not Found", status: 404});
-            else throw new Error(error);
+                throw HttpException.createError({code: 404});
+            throw new Error(error);
         }
         const user = await UsersService.getById( data.id, ['id'] );
         const matchPassword = PasswordManager.compare( req.body.password, user.data.password );
@@ -46,7 +46,7 @@ router.post('/login', async(req, res) => {
         apiResponse.success( token );
 
     } catch (error) {
-        apiResponse.error( error.message );
+        apiResponse.buildHttpError( error );
     } finally {
         apiResponse.sendAsJson();
     }

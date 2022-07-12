@@ -1,9 +1,11 @@
 const {Cleaning} = require('../../Tools/cleaning.tool');
+const HttpException = require('http-exception');
+const HttpCodes = require('../../Tools/http.tool');
 class ApiResponse {
-    DEFAULT_ERROR_CODE = 500;
+    DEFAULT_ERROR_CODE = HttpCodes.getCode( "InternalServerError" );
     DEFAULT_ERROR_MESSAGE = 'Error';
     DEFAULT_SUCCESS_MESSAGE = 'OK';
-    DEFAULT_SUCCESS_CODE = 200;
+    DEFAULT_SUCCESS_CODE = HttpCodes.getCode( "Success" );
 
     BAD_REQUEST_CODE = 400;
     NOT_FOUND_CODE = 404;
@@ -33,6 +35,13 @@ class ApiResponse {
         return this;
     }
 
+    badRequest(entryData) {
+        this.#success = false;
+        this.#code = this.BAD_REQUEST_CODE;
+        this.#data = entryData || 'Bad request';
+        return this;
+    }
+
     notFound(resource) {
         this.#success = false;
         this.#code = this.NOT_FOUND_CODE;
@@ -40,12 +49,14 @@ class ApiResponse {
         return this;
     }
 
-    badRequest(entryData) {
-        this.#success = false;
-        this.#code = this.BAD_REQUEST_CODE;
-        this.#data = entryData || 'Bad request';
-        return this;
+
+    buildHttpError(error) {
+        if(error instanceof HttpException) {
+            this.error( HttpCodes.getValue( error.code ), error.code);
+        } else this.error( error.message );
     }
+
+    
 
     #serialize() {
         return {
