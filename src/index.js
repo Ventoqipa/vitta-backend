@@ -42,6 +42,7 @@ let options = {
     files: ['./routers/*.js'] //Path to the API handle folder
 };
 expressSwagger(options);  
+
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 
@@ -51,6 +52,8 @@ app.use('/auth', verifyApiKey, require('./routers/03-auth.router'));
 
 app.use('/users', verifyToken, require('./routers/04-users.router'));
 app.use('/alarms', verifyToken, require('./routers/05-alarms.router'));
+app.use('/notifications', verifyApiKey, require('./routers/06-notifications.router'));
+
 
 app.listen(port, () => {
   console.log(`Just doing magic for Vitta on port ${port}`);

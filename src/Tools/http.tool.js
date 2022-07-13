@@ -56,7 +56,7 @@ class HttpCodes {
         for (const key in this.CODES) {
             if (Object.hasOwnProperty.call(this.CODES, key)) {
                 const element = this.CODES[key];
-                if (element === value) return key;
+                if (element === value) return parseInt(key);
             }
         }
     }
