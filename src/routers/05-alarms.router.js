@@ -7,9 +7,10 @@ const TextTransform = require("../Tools/text-transform.tool");
 /**
  * @route GET /alarms/
  * @group Alarms
- * @returns {object} 200 - done: true <br> data: [{alarm data}, {alarm data}] 
- * @returns {object} 500 - done: false<br>error: 'Some error'
- * @returns {string} 403 - Not authorized, use Bearer JWT authorization
+ * @returns {AlarmListResponse.model} 200 - Returns the list of current alarms related to this account
+ * @returns {ApiError.model} 500 - An error was occurred
+ * @returns {NotAuthorization.model} 403 - Access denied
+ * @returns {Unauthorized.model} 401 - Access denied
  */
  router.get('/', async (req, res) => {
     const apiResponse = new ApiResponse(res);
@@ -28,12 +29,14 @@ const TextTransform = require("../Tools/text-transform.tool");
 });
 
 /**
- * @route GET /alarms/:id
+ * @route GET /alarms/{id}
  * @group Alarms
- * @param {numeric} id.path - The id of the alarm
- * @returns {object} 200 - done: true <br> data: {alarm data}
- * @returns {object} 500 - done: false<br>error: 'Some error'
- * @returns {string} 403 - Not authorized, use Bearer JWT authorization
+ * @param {integer} id.path - The alarm id for look up - eg: 1
+ * @returns {AlarmResponse.model} 200 - If found the alarm with given id, returns the alarm data
+ * @returns {NotFoundError.model} 404 - Resource not found
+ * @returns {ApiError.model} 500 - An error was occurred
+ * @returns {NotAuthorization.model} 403 - Access denied
+ * @returns {Unauthorized.model} 401 - Access denied
  */
  router.get('/:id', async (req, res) => {
     const apiResponse = new ApiResponse(res);
@@ -59,9 +62,12 @@ const TextTransform = require("../Tools/text-transform.tool");
 /**
  * @route POST /alarms
  * @group Alarms
- * @returns {object} 200 - done: true <br> data: [{user data}, {user data}, ...]
- * @returns {object} 500 - done: false<br>error: 'Some error'
- * @returns {string} 403 - Not authorized, use Bearer JWT authorization
+ * @param {AlarmInputRequest.model} json.body.required - The alarm data
+ * @returns {AlarmCreatedResponse.model} 200 - Returns the id of new alarm
+ * @returns {NotAuthorization.model} 403 - Access denied
+ * @returns {Unauthorized.model} 401 - Access denied
+ * @returns {ApiError.model} 500 - An error was occurred
+ * @security basic
  */
 router.post('/', async(req, res) => {
     const apiResponse = new ApiResponse(res);

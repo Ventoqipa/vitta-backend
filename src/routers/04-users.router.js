@@ -8,9 +8,10 @@ const AccountService = require('../Services/accounts.service');
 /**
  * @route GET /users
  * @group Users
- * @returns {object} 200 - done: true <br> data: [{user data}, {user data}, ...]
- * @returns {object} 500 - done: false<br>error: 'Some error'
- * @returns {string} 403 - Not authorized, use Bearer JWT authorization
+ * @returns {UserListResponse.model} 200 - Returns the list of current users
+ * @returns {ApiError.model} 500 - An error was occurred
+ * @returns {NotAuthorization.model} 403 - Access denied
+ * @returns {Unauthorized.model} 401 - Access denied
  */
 router.get('/', async (req, res) => {
     const apiResponse = new ApiResponse(res);
@@ -29,12 +30,14 @@ router.get('/', async (req, res) => {
 });
 
 /**
- * @route GET /users/:id
+ * @route GET /users/{id}
  * @group Users
- * @param {numeric} id.path - The id of the user
- * @returns {object} 200 - done: true <br> data: {user data}
- * @returns {object} 500 - done: false<br>error: 'Some error'
- * @returns {string} 403 - Not authorized, use Bearer JWT authorization
+ * @param {integer} id.path - The user id for look up - eg: 1
+ * @returns {UserResponse.model} 200 - If found the user with given id, returns the user data
+ * @returns {NotFoundError.model} 404 - Resource not found
+ * @returns {ApiError.model} 500 - An error was occurred
+ * @returns {NotAuthorization.model} 403 - Access denied
+ * @returns {Unauthorized.model} 401 - Access denied
  */
  router.get('/:id', async (req, res) => {
     const apiResponse = new ApiResponse(res);
@@ -55,13 +58,12 @@ router.get('/', async (req, res) => {
 /**
  * @route POST /users
  * @group Users
- * @param {string} name.required - User name
- * @param {string} email.required - User email
- * @param {string} birthday.required - User birthday in format MM-DD-YYYY
- * @param {string} gender.required - User gender in numeric value where 1 = 'male', 2 = 'female' and 0 = 'Not specified'
- * @returns {object} 200 - done: true <br> data: [{user data}, {user data}, ...]
- * @returns {object} 500 - done: false<br>error: 'Some error'
- * @returns {string} 403 - Not authorized, use Bearer JWT authorization
+ * @param {UserInputRequest.model} json.body.required - The user data
+ * @returns {UserInputResponse.model} 200 - Returns the id of new user
+ * @returns {NotAuthorization.model} 403 - Access denied
+ * @returns {Unauthorized.model} 401 - Access denied
+ * @returns {ApiError.model} 500 - An error was occurred
+ * @security basic
  */
 router.post('/', async(req, res) => {
     const apiResponse = new ApiResponse(res);
