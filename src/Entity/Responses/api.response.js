@@ -54,6 +54,7 @@ class ApiResponse {
         if(error instanceof HttpException) {
             this.error( HttpCodes.getValue( error.code ), error.code);
         } else this.error( error.message );
+        return this;
     }
 
     
